@@ -1,0 +1,22 @@
+frr version 8.4.1
+frr defaults traditional
+hostname r1a
+log stdout
+service integrated-vtysh-config
+
+interface eth1
+ description Link to ABR1 (eth2)
+ ip address 10.1.1.2/30
+ ip ospf network point-to-point
+
+interface eth2
+ description Link to R1B (eth2)
+ ip address 10.1.3.1/30
+ ip ospf network point-to-point
+
+router ospf
+ ospf router-id 11.11.11.11
+ network 10.1.1.0/30 area 1
+ network 10.1.3.0/30 area 1
+
+line vty

@@ -1,0 +1,216 @@
+name: asdn-topo
+mgmt:
+  network: mgmt
+  ipv4-subnet: 192.168.100.0/24
+
+topology:
+  nodes:
+    srl1:
+      kind: srl
+      image: ghcr.io/nokia/srlinux
+      mgmt-ipv4: 192.168.100.6
+      startup-config: ./configs/srl1.cfg
+
+    srl2:
+      kind: srl
+      image: ghcr.io/nokia/srlinux
+      mgmt-ipv4: 192.168.100.7
+      startup-config: ./configs/srl2.cfg
+
+    srl3:
+      kind: srl
+      image: ghcr.io/nokia/srlinux
+      mgmt-ipv4: 192.168.100.8
+      startup-config: ./configs/srl3.cfg
+
+    abr1:
+      kind: linux
+      image: frrouting/frr:v8.4.1
+      mgmt-ipv4: 192.168.100.10
+      binds:
+        - ./configs/abr1.conf:/etc/frr/frr.conf
+        - ./configs/daemons:/etc/frr/daemons
+      exec:
+        - sysctl -w net.ipv4.ip_forward=1
+        - ip link set dev eth1 mtu 1500
+      env:
+         FRR_Ospf: "yes"
+
+    abr2:
+      kind: linux
+      image: frrouting/frr:v8.4.1
+      mgmt-ipv4: 192.168.100.11
+      binds:
+        - ./configs/abr2.conf:/etc/frr/frr.conf
+        - ./configs/daemons:/etc/frr/daemons
+      exec:
+        - sysctl -w net.ipv4.ip_forward=1
+        - ip link set dev eth1 mtu 1500
+      env:
+         FRR_Ospf: "yes"
+
+    abr3:
+      kind: linux
+      image: frrouting/frr:v8.4.1
+      mgmt-ipv4: 192.168.100.12
+      binds:
+        - ./configs/abr3.conf:/etc/frr/frr.conf
+        - ./configs/daemons:/etc/frr/daemons
+      exec:
+        - sysctl -w net.ipv4.ip_forward=1
+        - ip link set dev eth1 mtu 1500
+      env:
+         FRR_Ospf: "yes"
+
+    host1:
+      kind: linux
+      image: alpine:latest
+      mgmt-ipv4: 192.168.100.13
+      exec:
+        - sysctl -w net.ipv4.ip_forward=1
+        - ip addr add 10.1.4.2/30 dev eth1
+        - sh -c "ip route del default 2>/dev/null || true"
+        - ip route add default via 10.1.4.1
+
+    host2:
+      kind: linux
+      image: alpine:latest
+      mgmt-ipv4: 192.168.100.14
+      exec:
+        - sysctl -w net.ipv4.ip_forward=1
+        - ip addr add 10.2.4.2/30 dev eth1
+        - sh -c "ip route del default 2>/dev/null || true"
+        - ip route add default via 10.2.4.1
+
+    host3:
+      kind: linux
+      image: alpine:latest
+      mgmt-ipv4: 192.168.100.15
+      exec:
+        - sysctl -w net.ipv4.ip_forward=1
+        - ip addr add 10.3.4.2/30 dev eth1
+        - sh -c "ip route del default 2>/dev/null || true"
+        - ip route add default via 10.3.4.1
+
+    # --- TeraFlowSDN Controller ---
+    controller:
+      kind: linux
+      image: ubuntu:22.04
+      mgmt-ipv4: 192.168.100.5
+      binds:
+        - ./configs/controller.cfg:/etc/containerlab/startup.sh
+      entrypoint: "/bin/bash /etc/containerlab/startup.sh"
+
+    # --- Area 1 Routers ---
+    r1a:
+      kind: linux
+      image: frrouting/frr:v8.4.1
+      mgmt-ipv4: 192.168.100.16
+      binds:
+        - ./configs/r1a.conf:/etc/frr/frr.conf
+        - ./configs/daemons:/etc/frr/daemons
+      exec:
+        - sysctl -w net.ipv4.ip_forward=1
+      env:
+         FRR_Ospf: "yes"
+
+    r1b:
+      kind: linux
+      image: frrouting/frr:v8.4.1
+      mgmt-ipv4: 192.168.100.17
+      binds:
+        - ./configs/r1b.conf:/etc/frr/frr.conf
+        - ./configs/daemons:/etc/frr/daemons
+      exec:
+        - sysctl -w net.ipv4.ip_forward=1
+      env:
+         FRR_Ospf: "yes"
+
+    # --- Area 2 Routers ---
+    r2a:
+      kind: linux
+      image: frrouting/frr:v8.4.1
+      mgmt-ipv4: 192.168.100.18
+      binds:
+        - ./configs/r2a.conf:/etc/frr/frr.conf
+        - ./configs/daemons:/etc/frr/daemons
+      exec:
+        - sysctl -w net.ipv4.ip_forward=1
+      env:
+         FRR_Ospf: "yes"
+
+    r2b:
+      kind: linux
+      image: frrouting/frr:v8.4.1
+      mgmt-ipv4: 192.168.100.19
+      binds:
+        - ./configs/r2b.conf:/etc/frr/frr.conf
+        - ./configs/daemons:/etc/frr/daemons
+      exec:
+        - sysctl -w net.ipv4.ip_forward=1
+      env:
+         FRR_Ospf: "yes"
+
+    # --- Area 3 Routers ---
+    r3a:
+      kind: linux
+      image: frrouting/frr:v8.4.1
+      mgmt-ipv4: 192.168.100.20
+      binds:
+        - ./configs/r3a.conf:/etc/frr/frr.conf
+        - ./configs/daemons:/etc/frr/daemons
+      exec:
+        - sysctl -w net.ipv4.ip_forward=1
+      env:
+         FRR_Ospf: "yes"
+
+    r3b:
+      kind: linux
+      image: frrouting/frr:v8.4.1
+      mgmt-ipv4: 192.168.100.21
+      binds:
+        - ./configs/r3b.conf:/etc/frr/frr.conf
+        - ./configs/daemons:/etc/frr/daemons
+      exec:
+        - sysctl -w net.ipv4.ip_forward=1
+      env:
+         FRR_Ospf: "yes"
+
+  links:
+    # --- SDN Core interconnect ---
+    - endpoints: ["srl1:e1-1", "srl2:e1-1"]
+    - endpoints: ["srl2:e1-2", "srl3:e1-1"]
+    - endpoints: ["srl1:e1-2", "srl3:e1-2"]
+
+    # --- ABRs to SR Linux Core (Area 0) ---
+    - endpoints: ["srl1:e1-3", "abr1:eth1"]
+    - endpoints: ["srl2:e1-3", "abr2:eth1"]
+    - endpoints: ["srl3:e1-3", "abr3:eth1"]
+
+    # --- ABRs to Hosts ---
+    - endpoints: ["abr1:eth2", "host1:eth1"]
+    - endpoints: ["abr2:eth2", "host2:eth1"]
+    - endpoints: ["abr3:eth2", "host3:eth1"]
+
+    # --- ABRs to Area Routers ---
+    # Area 1
+    - endpoints: ["abr1:eth3", "r1a:eth1"]
+    - endpoints: ["abr1:eth4", "r1b:eth1"]
+
+    # Area 2
+    - endpoints: ["abr2:eth3", "r2a:eth1"]
+    - endpoints: ["abr2:eth4", "r2b:eth1"]
+
+    # Area 3
+    - endpoints: ["abr3:eth3", "r3a:eth1"]
+    - endpoints: ["abr3:eth4", "r3b:eth1"]
+
+    # Intra-Area Router Links
+    - endpoints: ["r1a:eth2", "r1b:eth2"]
+    - endpoints: ["r2a:eth2", "r2b:eth2"]
+    - endpoints: ["r3a:eth2", "r3b:eth2"]
+
+    # Controller to SDN Core for gNMI access
+    - endpoints: ["controller:eth1", "srl1:e1-4"]
+    - endpoints: ["controller:eth2", "srl2:e1-4"]
+    - endpoints: ["controller:eth3", "srl3:e1-4"]

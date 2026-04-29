@@ -1,0 +1,37 @@
+frr version 8.4.1_git
+frr defaults traditional
+hostname abr1
+log stdout
+no ipv6 forwarding
+!
+interface eth1
+ description Link to SRL1 (e1-3)
+ ip address 10.0.1.2/30
+ ip ospf network point-to-point
+exit
+!
+interface eth2
+ description Link to HOST1
+ ip address 10.1.4.1/30
+exit
+!
+interface eth3
+ description Link to R1A (eth1)
+ ip address 10.1.1.1/30
+ ip ospf mtu-ignore
+ ip ospf network point-to-point
+exit
+!
+interface eth4
+ description Link to R1B (eth1)
+ ip address 10.1.2.1/30
+ ip ospf mtu-ignore
+ ip ospf network point-to-point
+exit
+!
+router ospf
+ ospf router-id 1.1.1.1
+ network 10.0.1.0/30 area 0
+ network 10.1.1.0/30 area 1
+ network 10.1.2.0/30 area 1
+exit

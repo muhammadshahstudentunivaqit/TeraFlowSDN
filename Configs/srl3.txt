@@ -1,0 +1,65 @@
+devunivaq@devunivaq-VM:~/asdn-topo$ docker exec -it clab-asdn-topo-srl3 sr_cli info network-instance default protocols ospf
+    instance default {
+        admin-state enable
+        version ospf-v2
+        router-id 10.255.0.3
+        area 0.0.0.0 {
+            interface ethernet-1/1.0 {
+                interface-type point-to-point
+            }
+            interface ethernet-1/2.0 {
+                interface-type point-to-point
+            }
+            interface ethernet-1/3.0 {
+                interface-type point-to-point
+            }
+            interface ethernet-1/4.0 {
+                interface-type point-to-point
+            }
+        }
+    }
+devunivaq@devunivaq-VM:~/asdn-topo$ docker exec -it clab-asdn-topo-srl3 sr_cli show network-instance default interfaces ethernet-1/1.0
+====================================================================================================================================
+Net instance    : default
+Interface       : ethernet-1/1.0
+Type            : routed
+Oper state      : up
+Ip mtu          : 1500
+  Prefix                                    Origin       Status
+  ===============================================================================================
+  10.0.23.2/30                              static       preferred, primary
+====================================================================================================================================
+devunivaq@devunivaq-VM:~/asdn-topo$ docker exec -it clab-asdn-topo-srl3 sr_cli show network-instance default interfaces ethernet-1/2.0
+====================================================================================================================================
+Net instance    : default
+Interface       : ethernet-1/2.0
+Type            : routed
+Oper state      : up
+Ip mtu          : 1500
+  Prefix                                    Origin       Status
+  ===============================================================================================
+  10.0.13.2/30                              static       preferred, primary
+====================================================================================================================================
+devunivaq@devunivaq-VM:~/asdn-topo$ docker exec -it clab-asdn-topo-srl3 sr_cli show network-instance default interfaces ethernet-1/3.0
+====================================================================================================================================
+Net instance    : default
+Interface       : ethernet-1/3.0
+Type            : routed
+Oper state      : up
+Ip mtu          : 1500
+  Prefix                                    Origin       Status
+  ===============================================================================================
+  10.0.3.1/30                               static       preferred, primary
+====================================================================================================================================
+devunivaq@devunivaq-VM:~/asdn-topo$ docker exec -it clab-asdn-topo-srl3 sr_cli show network-instance default interfaces ethernet-1/4.0
+====================================================================================================================================
+Net instance    : default
+Interface       : ethernet-1/4.0
+Type            : routed
+Oper state      : up
+Ip mtu          : 1500
+  Prefix                                    Origin       Status
+  ===============================================================================================
+  10.0.99.10/30                             static       preferred, primary
+====================================================================================================================================
+devunivaq@devunivaq-VM:~/asdn-topo$ 

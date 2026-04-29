@@ -1,0 +1,69 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: tfsdn-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: teraflow
+      POSTGRES_PASSWORD: teraflow
+      POSTGRES_DB: teraflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: tfsdn-rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+
+  redis:
+    image: redis:7
+    container_name: tfsdn-redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+  teraflow-api:
+    image: teraflow/tfsdn-api:latest
+    container_name: tfsdn-api
+    depends_on:
+      - postgres
+      - rabbitmq
+      - redis
+    restart: always
+    ports:
+      - "8080:8080"     # Web UI/API access
+      - "8443:8443"
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: teraflow
+      DATABASE_PASSWORD: teraflow
+      DATABASE_NAME: teraflow
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: admin
+      RABBITMQ_PASS: admin
+      REDIS_HOST: redis
+
+  teraflow-web:
+    image: teraflow/tfsdn-web:latest
+    container_name: tfsdn-web
+    depends_on:
+      - teraflow-api
+    restart: always
+    ports:
+      - "8090:80"
+    environment:
+      API_URL: http://teraflow-api:8080
+
+volumes:
+  pgdata:
