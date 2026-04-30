@@ -5,7 +5,6 @@ This repository documents my hands-on work with TeraFlowSDN in a multi-area netw
 This work was carried out as part of my learning and experimentation in Software Defined Networking (SDN), focusing on practical deployment.
 
 
----
 
 ## Implemention
 - Built a multi-router topology using Containerlab
@@ -15,7 +14,6 @@ This work was carried out as part of my learning and experimentation in Software
 - Deployed the TeraFlowSDN controller container
 - Attempted integration between controller and network topology
 
----
 
 ## Topology
 <img width="4444" height="2489" alt="ASDN LLD" src="https://github.com/user-attachments/assets/0215b0cc-6089-40aa-8f4c-6f6a59a2d622" />
@@ -31,7 +29,7 @@ The setup consists of:
 - Container-based topology using Containerlab
 
 
----
+
 
 ## Technologies Used
 - Containerlab
@@ -40,7 +38,7 @@ The setup consists of:
 - Linux Networking (IP routing, sysctl)
 - TeraFlowSDN Controller
 
----
+
 
 ## Challenges Faced
 During implementation, I encountered several issues:
@@ -52,14 +50,14 @@ During implementation, I encountered several issues:
 
 Although the issues prevented full controller operation but it provided valuable debugging experience/learning.
 
----
+
 
 ## What I Learned
 - Understanding of SDN architecture(Control plane vs Data plane)
 - Hands-on experience with container-based network emulation
 - Importance of dependency
 
----
+
 
 ## Conclusion
 Although the full TeraFlowSDN setup could not be completed due to repository and dependency issues, this work provided a strong foundation in SDN concepts and practical deployment challenges.
